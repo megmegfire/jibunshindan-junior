@@ -106,6 +106,8 @@
     .start-notice p:last-child{ margin: 0; }
     .start-notice strong{ font-weight: 700; }
     .start-btn{
+      touch-action: manipulation;
+      pointer-events: auto;
       display: inline-block;
       padding: 16px 60px;
       background: linear-gradient(135deg, var(--accent2), var(--accent));
@@ -506,7 +508,9 @@
       .scoreTable th, .scoreTable td{ padding: 7px 8px; font-size: .88rem; }
       .shareBox{ padding: 10px 12px; }
       #startScreen h1{ font-size: 1.6rem; }
-      .start-btn{ padding: 14px 40px; font-size: 1rem; }
+      .start-btn{
+      touch-action: manipulation;
+      pointer-events: auto; padding: 14px 40px; font-size: 1rem; }
       /* .choice は常に縦並びのため min-width 指定不要 */
       .btnrow{ flex-direction: column; }
       #nextBtn{ order: -1; }
@@ -556,7 +560,7 @@
       <p style="margin-top:10px;">診断結果は9つのタイプのうち、<strong>あなたの傾向が強いものを表示します。</strong></p>
     </div>
 
-    <button class="start-btn" onclick="startQuiz()">診断スタート</button>
+    <button class="start-btn" id="startBtn" type="button">診断スタート</button>
   </div>
 
   <div id="quizScreen">
@@ -1074,7 +1078,7 @@
     const url = getShareUrl();
     const topLine = (topTypes.length === 1)
       ? `【じぶん診断J】結果：${topTypes[0].name}（${fmtHalfScore(topTypes[0].scoreHalf)} / ${fmtHalfScore(maxPossibleHalf)}点）`
-      : `【じぶん診断J】結果：${topTypes.map(t=>t.name).join("・")}`（同点トップ ${fmtHalfScore(topTypes[0].scoreHalf)} / ${fmtHalfScore(maxPossibleHalf)}点）`;
+      : `【じぶん診断J】結果：${topTypes.map(t=>t.name).join("・")}（同点トップ ${fmtHalfScore(topTypes[0].scoreHalf)} / ${fmtHalfScore(maxPossibleHalf)}点）`;
     const scoreLines = rows.map(r => `・${r.name}：${fmtHalfScore(r.scoreHalf)}点`).join("\n");
     const parts = [ topLine, "", "スコア一覧", scoreLines, "", "#じぶん診断J #診断 #自己分析" ];
     if(url) parts.push("", url);
@@ -1340,6 +1344,13 @@
     window.scrollTo({ top:0, behavior:"smooth" });
   }
 
+  // Start button (for GitHub Pages / mobile Safari reliability)
+  const startBtn = document.getElementById("startBtn");
+  if(startBtn){
+    startBtn.addEventListener("click", startQuiz);
+  }
+
+
   document.getElementById("retryBtn").addEventListener("click", () => {
     document.getElementById("resultScreen").style.display = "none";
     document.getElementById("startScreen").style.display = "block";
@@ -1348,4 +1359,3 @@
 </script>
 </body>
 </html>
-                                              
